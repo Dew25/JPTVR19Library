@@ -13,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,13 +23,13 @@ import java.io.ObjectOutputStream;
  */
 public class ReaderSaver {
 
-    public void saveReaders(Reader[] readers) {
+    public void saveReaders(List<Reader> listReader) {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
             fos = new FileOutputStream("readers");
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(readers);
+            oos.writeObject(listReader);
             oos.flush();
         } catch (FileNotFoundException ex) {
             System.out.println("Не найден файл");
@@ -36,14 +38,14 @@ public class ReaderSaver {
         }
     }
 
-    public Reader[] loadReaders() {
-        Reader[] readers = new Reader[10];
+    public List<Reader> loadReaders() {
+        List<Reader> readers = new ArrayList();
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try {
             fis = new FileInputStream("readers");
             ois = new ObjectInputStream(fis);
-            readers = (Reader[]) ois.readObject();
+            readers = (List<Reader>) ois.readObject();
         } catch (FileNotFoundException ex) {
             System.out.println("Не найден файл");
         } catch (IOException ex) {

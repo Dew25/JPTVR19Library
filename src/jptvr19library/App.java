@@ -13,6 +13,8 @@ import entity.Book;
 import entity.History;
 import entity.Reader;
 import entity.User;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import security.SecureManager;
 import tools.creators.BookManager;
@@ -26,36 +28,37 @@ import ui.ReaderUI;
  * @author Melnikov
  */
 public class App {
-    private Book[] books = new Book[10];
-    private Reader[] readers = new Reader[10];
-    private History[] histories = new History[10];
-    private User[] users = new User[10];
-   
+    private List<Book> listBooks = new ArrayList<>();
+    private List<Reader> listReaders = new ArrayList<>();
+    private List<History> listHistories = new ArrayList<>();
+    private List<User> listUsers = new ArrayList<>();
+
     private BookSaver bookSaver = new BookSaver();
     private ReaderSaver readerSaver = new ReaderSaver();
     private HistorySaver historySaver = new HistorySaver();
-    private SecureManager secureManager = new SecureManager();
     private UserSaver userSaver = new UserSaver();
 
+    private SecureManager secureManager = new SecureManager();
+    
     public static User loginedUser;
     
     public App() {
-        books = bookSaver.loadBooks();
-        readers = readerSaver.loadReaders();
-        histories = historySaver.loadHistories();
-        users = userSaver.loadUsers();
+        listBooks = bookSaver.loadBooks();
+        listReaders = readerSaver.loadReaders();
+        listHistories = historySaver.loadHistories();
+        listUsers = userSaver.loadUsers();
     }
     
     public void run(){
         boolean repeat = true;
         System.out.println("--- Библиотека ---");
-        this.loginedUser = secureManager.checkTask(users,readers);
-        if("MANAGER".equals(this.loginedUser.getRole())){
+        this.loginedUser = secureManager.checkTask(listUsers,listReaders);
+        if(SecureManager.role.MANAGER.toString().equals(this.loginedUser.getRole())){
             ManagerUI managerUI = new ManagerUI();
-            managerUI.getManagerUI(readers, users, books, histories);
-        }else if("READER".equals(this.loginedUser.getRole())){
+            managerUI.getManagerUI(listReaders, listUsers, listBooks, listHistories);
+        }else if(SecureManager.role.READER.toString().equals(this.loginedUser.getRole())){
             ReaderUI readerUI = new ReaderUI();
-            readerUI.getReaderUI(readers, users, books, histories);
+            readerUI.getReaderUI(listReaders, listUsers, listBooks, listHistories);
         }
     }
 }

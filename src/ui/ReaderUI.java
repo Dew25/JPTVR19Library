@@ -9,6 +9,7 @@ import entity.Book;
 import entity.History;
 import entity.Reader;
 import entity.User;
+import java.util.List;
 import java.util.Scanner;
 import security.SecureManager;
 import tools.creators.BookManager;
@@ -33,7 +34,7 @@ public class ReaderUI {
     private SecureManager secureManager = new SecureManager();
     private UserSaver userSaver = new UserSaver();
     
-    public void getReaderUI(Reader[] readers, User[] users, Book[] books, History[] histories){
+    public void getReaderUI(List<Reader> listReaders,List<User> listUsers, List<Book> listBooks, List<History> listHistories){
         boolean repeat = true;
         do{
             System.out.println("Задачи: ");
@@ -51,20 +52,20 @@ public class ReaderUI {
                     break;
                 case "1":
                     System.out.println("--- Список книг ---");
-                    bookManager.printListBooks(books);
+                    bookManager.printListBooks(listBooks);
                     break;
                 case "2":
                     System.out.println("--- Выдать книгу читателю ---");
-                    History history = libraryManager.takeOnBook(books, readers);
-                    libraryManager.addHistoryToArray(history,histories);
-                    historySaver.saveHistories(histories);
+                    History history = libraryManager.takeOnBook(listBooks, listReaders);
+                    libraryManager.addHistoryToArray(history,listHistories);
+                    historySaver.saveHistories(listHistories);
                     break;
                 case "3":
                     System.out.println("--- Вернуть книгу в библиотеку ---");
                     libraryManager = new LibraryManager();
-                    libraryManager.returnBook(histories);
+                    libraryManager.returnBook(listHistories);
                     historySaver = new HistorySaver();
-                    historySaver.saveHistories(histories);
+                    historySaver.saveHistories(listHistories);
                     break;
                 default:
                     System.out.println("Нет такой задачи.");

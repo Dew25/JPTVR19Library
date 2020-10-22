@@ -12,6 +12,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -20,13 +22,13 @@ import java.io.ObjectOutputStream;
  */
 public class BookSaver {
 
-    public void saveBooks(Book[] books) {
+    public void saveBooks(List listBooks) {
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
             fos = new FileOutputStream("books");
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(books);
+            oos.writeObject(listBooks);
             oos.flush();
         } catch (FileNotFoundException ex) {
             System.out.println("Не найден файл");
@@ -35,14 +37,15 @@ public class BookSaver {
         }
     }
 
-    public Book[] loadBooks() {
+    public List loadBooks() {
         Book[] books = new Book[10];
+        List<Book> listBooks = new ArrayList<>();
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try {
             fis = new FileInputStream("books");
             ois = new ObjectInputStream(fis);
-            books = (Book[]) ois.readObject();
+            listBooks = (List) ois.readObject();
         } catch (FileNotFoundException ex) {
             System.out.println("Не найден файл");
         } catch (IOException ex) {
@@ -50,7 +53,7 @@ public class BookSaver {
         } catch (ClassNotFoundException ex) {
             System.out.println("Не найден класс");
         }
-        return books;
+        return listBooks;
     }
 
     

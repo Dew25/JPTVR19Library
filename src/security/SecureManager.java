@@ -7,6 +7,7 @@ package security;
 
 import entity.Reader;
 import entity.User;
+import java.util.List;
 import java.util.Scanner;
 import tools.creators.ReaderManager;
 import tools.creators.UserManager;
@@ -25,7 +26,7 @@ public static enum role {
         MANAGER
 };
 
-    public User checkTask(User[] users, Reader[] readers) {
+    public User checkTask(List<User> listUsers, List<Reader> listReaders) {
         // Предоставим выбор пользователю:
         //  0. Выход из программы
         //  1. Регистрация
@@ -47,10 +48,10 @@ public static enum role {
                     System.exit(0);
                     break;
                 case "1":
-                    this.registration(users,readers);
+                    this.registration(listUsers,listReaders);
                     break;
                 case "2":
-                    return this.checkInUser(users);
+                    return this.checkInUser(listUsers);
                     
                 default:
                     System.out.println("Выберите указанные задачи.");;
@@ -68,26 +69,26 @@ public static enum role {
         return numTask;
     }
 
-    private void registration(User[] users, Reader[] readers) {
+    private void registration(List<User> listUsers, List<Reader> listReaders) {
         UserManager userManager = new UserManager();
         User user = userManager.createUser();
-        userManager.addUserToArray(user, users);
+        userManager.addUserToArray(user, listUsers);
         ReaderManager readerManager = new ReaderManager();
-        readerManager.addReaderToArray(user.getReader(), readers);
+        readerManager.addReaderToArray(user.getReader(), listReaders);
         ReaderSaver readerSaver = new ReaderSaver();
-        readerSaver.saveReaders(readers);
+        readerSaver.saveReaders(listReaders);
         UserSaver userSaver = new UserSaver();
-        userSaver.saveUsers(users);
+        userSaver.saveUsers(listUsers);
     }
 
-    private User checkInUser(User[] users) {
+    private User checkInUser(List<User> listUsers) {
         System.out.println("--- Вход в систему ---");
         System.out.println("Введите логин: ");
         String login = scanner.nextLine();
         System.out.println("Введите пароль: ");
         String password = scanner.nextLine();
-        for (int i = 0; i < users.length; i++) {
-            User user = users[i];
+        for (int i = 0; i < listUsers.size(); i++) {
+            User user = listUsers.get(i);
             if(user == null) continue;
             if(login.equals(user.getLogin())){//Authetication
                 for (int j = 0; j < 2; j++) {

@@ -7,6 +7,7 @@ package tools.creators;
 
 import entity.Reader;
 import entity.User;
+import java.util.List;
 import java.util.Scanner;
 import security.SecureManager;
 
@@ -51,19 +52,14 @@ public class UserManager {
         return user;
     }
 
-    public void addUserToArray(User user, User[] users) {
-        for (int i = 0; i < users.length; i++) {
-            if(users[i] == null){
-                users[i] = user;
-                break;
-            }
-        }
+    public void addUserToArray(User user, List<User> listUsers) {
+        listUsers.add(user);
     }
 
-    public void printListUsers(User[] users) {
-        for (int i = 0; i < users.length; i++) {
-            if(users[i] != null){
-                System.out.println(i+1+". " + users[i].toString());
+    public void printListUsers(List<User> listUsers) {
+        for (int i = 0; i < listUsers.size(); i++) {
+            if(listUsers.get(i) != null){
+                System.out.println(i+1+". " + listUsers.get(i).toString());
             }
         }   
     }
