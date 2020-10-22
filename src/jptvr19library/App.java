@@ -49,6 +49,7 @@ public class App {
     }
     
     public void run(){
+        
         boolean repeat = true;
         System.out.println("--- Библиотека ---");
         this.loginedUser = secureManager.checkTask(users,readers);
