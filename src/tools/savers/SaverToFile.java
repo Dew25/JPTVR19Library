@@ -5,7 +5,7 @@
  */
 package tools.savers;
 
-import entity.Book;
+import entity.Reader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -15,20 +15,18 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  *
  * @author Melnikov
  */
-public class BookSaver {
-
-    public void saveBooks(List listBooks) {
+public class SaverToFile {
+    public void save(List arrayList, String fileName){
         FileOutputStream fos = null;
         ObjectOutputStream oos = null;
         try {
-            fos = new FileOutputStream("books");
+            fos = new FileOutputStream(fileName);
             oos = new ObjectOutputStream(fos);
-            oos.writeObject(listBooks);
+            oos.writeObject(arrayList);
             oos.flush();
         } catch (FileNotFoundException ex) {
             System.out.println("Не найден файл");
@@ -36,16 +34,14 @@ public class BookSaver {
             System.out.println("Ошибка ввода/вывода");
         }
     }
-
-    public List loadBooks() {
-        Book[] books = new Book[10];
-        List<Book> listBooks = new ArrayList<>();
+    public List load(String fileName){
+        List arrayList = new ArrayList();
         FileInputStream fis = null;
         ObjectInputStream ois = null;
         try {
-            fis = new FileInputStream("books");
+            fis = new FileInputStream(fileName);
             ois = new ObjectInputStream(fis);
-            listBooks = (List) ois.readObject();
+            arrayList = (List) ois.readObject();
         } catch (FileNotFoundException ex) {
             System.out.println("Не найден файл");
         } catch (IOException ex) {
@@ -53,9 +49,6 @@ public class BookSaver {
         } catch (ClassNotFoundException ex) {
             System.out.println("Не найден класс");
         }
-        return listBooks;
-    }
-
-    
-    
+        return arrayList;
+    } 
 }

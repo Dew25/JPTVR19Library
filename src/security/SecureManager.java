@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Scanner;
 import tools.creators.ReaderManager;
 import tools.creators.UserManager;
-import tools.savers.ReaderSaver;
-import tools.savers.UserSaver;
+import tools.savers.SaverToFile;
+
 
 /**
  *
@@ -75,10 +75,9 @@ public static enum role {
         userManager.addUserToArray(user, listUsers);
         ReaderManager readerManager = new ReaderManager();
         readerManager.addReaderToArray(user.getReader(), listReaders);
-        ReaderSaver readerSaver = new ReaderSaver();
-        readerSaver.saveReaders(listReaders);
-        UserSaver userSaver = new UserSaver();
-        userSaver.saveUsers(listUsers);
+        SaverToFile saverToFile = new SaverToFile();
+        saverToFile.save(listReaders,"readers");
+        saverToFile.save(listUsers, "users");
     }
 
     private User checkInUser(List<User> listUsers) {
