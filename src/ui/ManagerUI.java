@@ -79,7 +79,7 @@ public class ManagerUI {
                     System.out.println("--- Вернуть книгу в библиотеку ---");
                     libraryManager = new LibraryManager();
                     libraryManager.returnBook(listHistories);
-                    saverToFile.save(listBooks,"books");
+                    saverToFile.save(listHistories,"histories");
                     break;
                 case "7":
                     System.out.println("--- Список выданных книг ---");
