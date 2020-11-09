@@ -15,6 +15,7 @@ import security.SecureManager;
 import tools.creators.BookManager;
 import tools.creators.LibraryManager;
 import tools.creators.ReaderManager;
+import tools.savers.SaverInterface;
 
 import tools.savers.SaverToFile;
 
@@ -27,9 +28,8 @@ public class ReaderUI {
     private BookManager bookManager = new BookManager();
     private ReaderManager readerManager = new ReaderManager();
     private LibraryManager libraryManager = new LibraryManager();
-    private SaverToFile saverToFile = new SaverToFile(); //private BookSaver bookSaver = new BookSaver();
-        
-    public void getReaderUI(List<Reader> listReaders,List<User> listUsers, List<Book> listBooks, List<History> listHistories){
+    
+    public void getReaderUI(List<Reader> listReaders,List<User> listUsers, List<Book> listBooks, List<History> listHistories, SaverInterface entitySaver){
         boolean repeat = true;
         do{
             System.out.println("Задачи: ");
@@ -53,13 +53,13 @@ public class ReaderUI {
                     System.out.println("--- Выдать книгу читателю ---");
                     History history = libraryManager.takeOnBook(listBooks, listReaders);
                     libraryManager.addHistoryToArray(history,listHistories);
-                    saverToFile.save(listHistories, "histories");
+                    entitySaver.save(listHistories, "histories");
                     break;
                 case "3":
                     System.out.println("--- Вернуть книгу в библиотеку ---");
                     libraryManager = new LibraryManager();
                     libraryManager.returnBook(listHistories);
-                    saverToFile.save(listHistories,"histories");
+                    entitySaver.save(listHistories,"histories");
                     break;
                 default:
                     System.out.println("Нет такой задачи.");
