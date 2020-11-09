@@ -70,7 +70,8 @@ public class Book implements Serializable{
     @Override
     public String toString() {
         return "Book{" 
-                + "name=" + name 
+                + "id=" + id 
+                + ", name=" + name 
                 + ", author=" + author 
                 + ", publishedYear=" + publishedYear 
                 + ", isbn=" + isbn 

@@ -52,8 +52,9 @@ public class ManagerUI {
                 case "1":
                     System.out.println("--- Добавить новую книгу ---");
                     Book book = bookManager.createBook();
+                    book = saverToFile.saveBook(book);
                     bookManager.addBookToArray(book,listBooks);
-                    saverToFile.save(listBooks,"books");
+                    //saverToFile.save(listBooks,"books");
                     break;
                 case "2":
                     System.out.println("--- Список книг ---");

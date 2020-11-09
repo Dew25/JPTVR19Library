@@ -9,12 +9,6 @@ import entity.Book;
 import entity.History;
 import entity.Reader;
 import entity.User;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -119,4 +113,15 @@ public class SaverToFile {
 //        }
 //        return arrayList;
     } 
+
+    public Book saveBook(Book book) {
+        tx.begin();
+            if(book.getId() == null){
+                em.persist(book);
+            }else{
+                em.merge(book);
+            }
+        tx.commit();
+        return book;
+    }
 }
