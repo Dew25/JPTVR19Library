@@ -7,6 +7,8 @@ package tools.creators;
 
 import entity.Reader;
 import entity.User;
+import entity.controller.UserJpaController;
+import factory.JPAControllerFactory;
 import java.util.List;
 import java.util.Scanner;
 import security.SecureManager;
@@ -21,6 +23,7 @@ public class UserManager {
     public User createUser() {
         ReaderManager readerManager = new ReaderManager();
         Reader reader = readerManager.createReader();
+        
         User user = new User();
         System.out.println("--- Создание пользователя ---");
         System.out.print("Введите логин: ");
@@ -49,6 +52,7 @@ public class UserManager {
         user.setRole(SecureManager.role.values()[numRole - 1].toString());
         user.setReader(reader);
         System.out.println("Пользователь создан: "+user.toString());
+        new JPAControllerFactory().getUserController().create(user);
         return user;
     }
 
@@ -56,12 +60,12 @@ public class UserManager {
         listUsers.add(user);
     }
 
-    public void printListUsers(List<User> listUsers) {
+    public void printListUsers() {
+        UserJpaController userJpaController = new JPAControllerFactory().getUserController();
+        List<User> listUsers = userJpaController.findListEntities();
         for (int i = 0; i < listUsers.size(); i++) {
-            if(listUsers.get(i) != null){
-                System.out.println(i+1+". " + listUsers.get(i).toString());
-            }
-        }   
+            System.out.println(i+1+". "+listUsers.get(i).toString());
+        }    
     }
     
 }

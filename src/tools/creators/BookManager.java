@@ -6,6 +6,8 @@
 package tools.creators;
 
 import entity.Book;
+import entity.controller.BookJpaController;
+import factory.JPAControllerFactory;
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,6 +31,7 @@ public class BookManager {
         System.out.print("Введите ISBN книги: ");
         book.setIsbn(scanner.nextLine());
         System.out.println("Создана книга: "+book.getName());
+        new JPAControllerFactory().getBookController().create(book);
         return book;
     }
 
@@ -36,11 +39,12 @@ public class BookManager {
         listBooks.add(book);
     }
 
-    public void printListBooks(List<Book> listBooks) {
+    public void printListBooks() {
+        BookJpaController bookJpaController = new JPAControllerFactory().getBookController();
+        List<Book> listBooks = bookJpaController.findListEntities();
+        
         for (int i = 0; i < listBooks.size(); i++) {
-            if(listBooks.get(i) != null){
-                System.out.println(i+1+". " + listBooks.get(i).toString());
-            }
+            System.out.println(i+1+". "+listBooks.get(i).toString());
         }   
     }
     

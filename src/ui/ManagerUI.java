@@ -8,15 +8,12 @@ package ui;
 import entity.Book;
 import entity.History;
 import entity.Reader;
-import entity.User;
+import factory.JPAControllerFactory;
 import java.util.List;
 import java.util.Scanner;
 import tools.creators.BookManager;
 import tools.creators.LibraryManager;
 import tools.creators.ReaderManager;
-import tools.savers.SaverInterface;
-import tools.savers.SaverToBase;
-import tools.savers.SaverToFile;
 
 
 
@@ -30,7 +27,7 @@ public class ManagerUI {
     private LibraryManager libraryManager = new LibraryManager();
   
     
-    public void getManagerUI(List<Reader> listReaders, List<User> listUsers, List<Book> listBooks, List<History> listHistories, SaverInterface entitySaver){
+    public void getManagerUI(){
         boolean repeat = true;
         do{
             System.out.println("Задачи: ");
@@ -53,39 +50,31 @@ public class ManagerUI {
                 case "1":
                     System.out.println("--- Добавить новую книгу ---");
                     Book book = bookManager.createBook();
-                    //book = entitySaver.saveBook(book);
-                    bookManager.addBookToArray(book,listBooks);
-                    entitySaver.save(listBooks,"books");
                     break;
                 case "2":
                     System.out.println("--- Список книг ---");
-                    bookManager.printListBooks(listBooks);
+                    bookManager.printListBooks();
                     break;
                 case "3":
                     System.out.println("--- Зарегистрировать читателя ---");
                     Reader reader = readerManager.createReader();
-                    readerManager.addReaderToArray(reader,listReaders);
-                    entitySaver.save(listReaders,"readers");
                     break;
                 case "4":
                     System.out.println("--- Список читателей ---");
-                    readerManager.printListReaders(listReaders);
+                    readerManager.printListReaders();
                     break;
                 case "5":
                     System.out.println("--- Выдать книгу читателю ---");
-                    History history = libraryManager.takeOnBook(listBooks, listReaders);
-                    libraryManager.addHistoryToArray(history,listHistories);
-                    entitySaver.save(listHistories,"histories");
+                    History history = libraryManager.takeOnBook();
                     break;
                 case "6":
                     System.out.println("--- Вернуть книгу в библиотеку ---");
                     libraryManager = new LibraryManager();
-                    libraryManager.returnBook(listHistories);
-                    entitySaver.save(listHistories,"histories");
+                    libraryManager.returnBook();
                     break;
                 case "7":
                     System.out.println("--- Список выданных книг ---");
-                    libraryManager.printListReadBooks(listHistories);
+                    libraryManager.printListReadBooks();
                     break;
                 default:
                     System.out.println("Нет такой задачи.");
