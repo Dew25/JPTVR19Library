@@ -6,7 +6,7 @@
 package security;
 
 import entity.User;
-import factory.JPAControllerFactory;
+import factory.FacadeFactory;
 import java.util.Scanner;
 import tools.creators.UserManager;
 
@@ -18,7 +18,7 @@ import tools.creators.UserManager;
 public class SecureManager {
     
 private Scanner scanner = new Scanner(System.in);
-private User user;
+
 public static enum role {
         READER, 
         MANAGER
@@ -56,7 +56,7 @@ public static enum role {
 
     private void registration() {
         UserManager userManager = new UserManager();
-        this.user = userManager.createUser();
+        userManager.createUser();
     }
 
     private User checkInUser() {
@@ -65,11 +65,12 @@ public static enum role {
         String login = scanner.nextLine();
         System.out.println("Введите пароль: ");
         String password = scanner.nextLine();
-        User user = new JPAControllerFactory().getUserController().findByLogin(login);
+        User user = new FacadeFactory().getUserFacade().findByLogin(login);
         if(user == null) {
             System.out.println("У вас нет доступа. Зарегистрируйтесь");
             System.exit(0);
         }
+        
         for (int j = 0; j < 2; j++) {
             if(password.equals(user.getPassword())){//Authorization
                 return user;

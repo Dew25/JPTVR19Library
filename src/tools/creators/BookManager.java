@@ -6,8 +6,8 @@
 package tools.creators;
 
 import entity.Book;
-import entity.controller.BookJpaController;
-import factory.JPAControllerFactory;
+import entity.controller.BookFacade;
+import factory.FacadeFactory;
 import java.util.List;
 import java.util.Scanner;
 
@@ -31,7 +31,7 @@ public class BookManager {
         System.out.print("Введите ISBN книги: ");
         book.setIsbn(scanner.nextLine());
         System.out.println("Создана книга: "+book.getName());
-        new JPAControllerFactory().getBookController().create(book);
+        new FacadeFactory().getBookFacade().create(book);
         return book;
     }
 
@@ -40,11 +40,9 @@ public class BookManager {
     }
 
     public void printListBooks() {
-        BookJpaController bookJpaController = new JPAControllerFactory().getBookController();
-        List<Book> listBooks = bookJpaController.findListEntities();
-        
+        List<Book> listBooks = (List<Book>) new FacadeFactory().getBookFacade().findListEntities();
         for (int i = 0; i < listBooks.size(); i++) {
-            System.out.println(i+1+". "+listBooks.get(i).toString());
+            System.out.println(listBooks.get(i).getId()+". "+listBooks.get(i).toString());
         }   
     }
     

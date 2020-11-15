@@ -7,16 +7,10 @@ package entity.controller;
 
 import entity.History;
 import entity.Reader;
+import factory.ConnectSingleton;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
 import jptvr19library.App;
 import security.SecureManager;
 
@@ -24,30 +18,30 @@ import security.SecureManager;
  *
  * @author jvm
  */
-public class HistoryJpaController extends AbstractJpaController<History> {
+public class HistoryFacade extends AbstractFcade<History> {
     
     @Override
     protected EntityManager getEntityManager() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTVR19LibraryPU");
-        EntityManager em = emf.createEntityManager();
-        return em;
+        ConnectSingleton connect = ConnectSingleton.getInstance();
+        return connect.getEntityManager();
     }
 
-    public HistoryJpaController() {
+    public HistoryFacade() {
         super(History.class);
     }
 
     public List<History> findListReadBooks() {
+        EntityManager em = null;
+        em = getEntityManager();
         List<History> listHistoryies = new ArrayList<>();
         Reader reader = App.loginedUser.getReader();
         if(SecureManager.role.MANAGER.toString().equals(App.loginedUser.getRole())){
-            listHistoryies = getEntityManager().createQuery("SELECT h FROM History h WHERE h.returnDate = NULL")
+            listHistoryies = (List<History>)em.createQuery("SELECT h FROM History h WHERE h.returnDate = NULL")
             .getResultList();
         }else if(SecureManager.role.READER.toString().equals(App.loginedUser.getRole()))
-            listHistoryies = getEntityManager().createQuery("SELECT h FROM History h WHERE h.reader = :reader AND h.returnDate = NULL")
+            listHistoryies = (List<History>) em.createQuery("SELECT h FROM History h WHERE h.reader = :reader AND h.returnDate = NULL")
             .setParameter("reader", reader)
             .getResultList();
         return listHistoryies;
     }
-    
 }

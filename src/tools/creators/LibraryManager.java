@@ -9,13 +9,12 @@ import entity.Book;
 import entity.History;
 import entity.Reader;
 import entity.User;
-import factory.JPAControllerFactory;
+import factory.FacadeFactory;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 import jptvr19library.App;
-import security.SecureManager;
 
 /**
  *
@@ -44,18 +43,18 @@ public class LibraryManager {
             System.out.print("Выберите номер читателя: ");
             Long readerNumber = scanner.nextLong();
             scanner.nextLine();
-            reader = new JPAControllerFactory().getReaderController().findEntity(readerNumber);
+            reader = new FacadeFactory().getReaderFacade().findEntity(readerNumber);
         }
         history.setReader(reader);
         bookManager.printListBooks();
         System.out.print("Выберите номер книги: ");
         Long bookNumber = scanner.nextLong();
         scanner.nextLine();
-        Book book = new JPAControllerFactory().getBookController().findEntity(bookNumber);
+        Book book = new FacadeFactory().getBookFacade().findEntity(bookNumber);
         history.setBook(book);
         Calendar calendar = new GregorianCalendar();
         history.setGiveOutDate(calendar.getTime());
-        new JPAControllerFactory().getHistoryController().create(history);
+        new FacadeFactory().getHistoryFacade().create(history);
         this.printHistory(history);
         return history;
     }
@@ -69,9 +68,9 @@ public class LibraryManager {
         Long historyNumber = scanner.nextLong();
         scanner.nextLine();
         Calendar calendar = new GregorianCalendar();
-        History history = new JPAControllerFactory().getHistoryController().findEntity(historyNumber);
+        History history = new FacadeFactory().getHistoryFacade().findEntity(historyNumber);
         history.setReturnDate(calendar.getTime());
-        new JPAControllerFactory().getHistoryController().edit(history);
+        new FacadeFactory().getHistoryFacade().edit(history);
     }
 
     
@@ -86,7 +85,7 @@ public class LibraryManager {
 
     public boolean printListReadBooks() {
         List<History> listHistories = null;
-        listHistories= new JPAControllerFactory().getHistoryController().findListReadBooks();
+        listHistories= new FacadeFactory().getHistoryFacade().findListReadBooks();
         if(listHistories != null && listHistories.size() > 0){
             for (int i = 0; i < listHistories.size(); i++) {
                 System.out.printf("%d. Книгу \"%s\" читает %s %s%n" 

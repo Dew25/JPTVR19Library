@@ -1,9 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Программа может работать только с базой.
+ * В памяти не хранятся списки книг, читателей, ипользователей и истории
+ * Если нужен список, он считывается из базы, испольуется и освобождается (сборщиком мусора)
+ * Так же и отдельные сущности считываются из базы по одной.
+ * Для того, чтобы в любом месте программы можно было воспользоваться фасадом сущности (патерт "Фасад"
+ * используется фабрика FacadeFactory (паттерн "Фабричный метод")
+ * Недостаток, который требуется устранить:
+ * Каждый фасад создает свое подключение к базе. Это трудоемкая и долгая операция.
+ * Решение: 
+ * Создать статический класс - одиночку (singleton), в котором будет создаваться подключение и оно будет доступно 
+ * во всх фасадах создаваемых фабрикой
  */
 package jptvr19library;
+
+import factory.ConnectSingleton;
+import javax.persistence.EntityManager;
 
 /**
  *
@@ -15,8 +26,11 @@ public class JPTVR19Library {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        App app = new App();
-        app.run();
+
+            App app = new App();
+            app.run();
+        
+        
     }
-    
+
 }

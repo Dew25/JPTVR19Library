@@ -16,9 +16,9 @@ import javax.persistence.criteria.Root;
  * @author jvm
  * @param <T> name classEntity
  */
-public abstract class AbstractJpaController<T>{
+public abstract class AbstractFcade<T>{
     private Class<T> entityClass;
-    public AbstractJpaController(Class<T> entityClass){
+    public AbstractFcade(Class<T> entityClass){
             this.entityClass = entityClass;
     }
 
@@ -26,16 +26,10 @@ public abstract class AbstractJpaController<T>{
 
     public void create(T entity) {
         EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(entity);
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
+        em = getEntityManager();
+        em.getTransaction().begin();
+        em.persist(entity);
+        em.getTransaction().commit();
     }
 
     public T edit(T entity){
@@ -48,11 +42,7 @@ public abstract class AbstractJpaController<T>{
             return entity;
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
+        } 
         return null;
     }
 
@@ -65,40 +55,30 @@ public abstract class AbstractJpaController<T>{
             em.getTransaction().commit();
         }catch(Exception ex){
             System.out.println("Удалить сущность не удалось");
-        }finally {
-            if (em != null) {
-                em.close();
-            }
         }
     }
 
     public List<T> findListEntities() {
-        javax.persistence.criteria.CriteriaQuery cq = getEntityManager().getCriteriaBuilder().createQuery();
+        EntityManager em = null;
+        em = getEntityManager();
+        javax.persistence.criteria.CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
         cq.select(cq.from(entityClass));
-        return getEntityManager().createQuery(cq).getResultList();
+        return em.createQuery(cq).getResultList();
     }
 
 
     public T findEntity(Long id) {
         EntityManager em = getEntityManager();
-        try {
-            return em.find(entityClass, id);
-        } finally {
-            em.close();
-        }
+        return em.find(entityClass, id);
     }
 
     public int getEntityCount() {
         EntityManager em = getEntityManager();
-        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root rt = cq.from(entityClass.getClass());
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
-        } finally {
-            em.close();
-        }
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root rt = cq.from(entityClass.getClass());
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
     }
 
     

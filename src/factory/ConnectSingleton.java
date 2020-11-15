@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entity.controller;
+package factory;
 
-import entity.Book;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -14,18 +13,21 @@ import javax.persistence.Persistence;
  *
  * @author jvm
  */
-public class BookJpaController extends AbstractJpaController<Book> {
-    
+public class ConnectSingleton {
+    private static ConnectSingleton instance;
     private EntityManager em;
-   
-    @Override
-    protected EntityManager getEntityManager() {
+    private  ConnectSingleton() {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTVR19LibraryPU");
-        return em = emf.createEntityManager();
+        this.em = emf.createEntityManager();
+        
     }
-
-    public BookJpaController() {
-        super(Book.class);
+    public EntityManager getEntityManager(){
+        return em;
     }
-    
+    public static ConnectSingleton getInstance(){
+        if(instance == null){
+            instance = new ConnectSingleton();
+        }
+        return instance;
+    }
 }

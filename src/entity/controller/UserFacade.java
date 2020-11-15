@@ -6,37 +6,35 @@
 package entity.controller;
 
 import entity.User;
+import factory.ConnectSingleton;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 
 /**
  *
  * @author jvm
  */
-public class UserJpaController extends AbstractJpaController<User> {
-    
-    private EntityManager em;
+public class UserFacade extends AbstractFcade<User> {
    
     @Override
     protected EntityManager getEntityManager() {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTVR19LibraryPU");
-        this.em = emf.createEntityManager();
-        return em;
+        ConnectSingleton connect = ConnectSingleton.getInstance();
+        return connect.getEntityManager();
     }
 
-    public UserJpaController() {
+    public UserFacade() {
         super(User.class);
     }
 
     public User findByLogin(String login) {
+        EntityManager em = null;
         try {
-            User user = (User)getEntityManager().createQuery("SELECT u FROM User u WHERE u.login=:login")
+            em = getEntityManager();
+            User user = (User)em.createQuery("SELECT u FROM User u WHERE u.login=:login")
                 .setParameter("login", login)
                 .getSingleResult();
             return user; 
         } catch (Exception e) {
-            System.out.println("error: "+e.getMessage());
+            System.out.println("error: "+e);
             return null;
         }
     }

@@ -6,8 +6,8 @@
 package tools.creators;
 
 import entity.Reader;
-import entity.controller.ReaderJpaController;
-import factory.JPAControllerFactory;
+import entity.controller.ReaderFacade;
+import factory.FacadeFactory;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,9 +26,8 @@ public class ReaderManager {
         reader.setLastname(scanner.nextLine());
         System.out.print("Введите телефон: ");
         reader.setPhone(scanner.nextLine());
+        new FacadeFactory().getReaderFacade().create(reader);
         this.printReader(reader);
-        JPAControllerFactory jpaControllerFactory = new JPAControllerFactory();
-        jpaControllerFactory.getReaderController().create(reader);
         return reader;
     }
 
@@ -41,11 +40,9 @@ public class ReaderManager {
     }
 
     public void printListReaders() {
-        ReaderJpaController readerJpaController = new JPAControllerFactory().getReaderController();
-        List<Reader> listReaders = readerJpaController.findListEntities();
-        
+        List<Reader> listReaders = new FacadeFactory().getReaderFacade().findListEntities();
         for (int i = 0; i < listReaders.size(); i++) {
-            System.out.println(i+1+". "+listReaders.get(i).toString());
+            System.out.println(listReaders.get(i).getId()+". "+listReaders.get(i).toString());
         }   
     }
     

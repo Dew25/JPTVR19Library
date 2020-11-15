@@ -8,7 +8,7 @@ package ui;
 import entity.Book;
 import entity.History;
 import entity.Reader;
-import factory.JPAControllerFactory;
+import factory.FacadeFactory;
 import java.util.List;
 import java.util.Scanner;
 import tools.creators.BookManager;
