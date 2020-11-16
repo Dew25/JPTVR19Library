@@ -7,6 +7,7 @@ package security;
 
 import entity.Reader;
 import entity.User;
+import entity.dbcontrollers.UserDBController;
 import java.util.List;
 import java.util.Scanner;
 import tools.creators.ReaderManager;
@@ -26,7 +27,7 @@ public static enum role {
         MANAGER
 };
 
-    public User checkTask(List<User> listUsers, List<Reader> listReaders, SaveInterface saver) {
+    public User checkTask() {
         // Предоставим выбор пользователю:
         //  0. Выход из программы
         //  1. Регистрация
@@ -48,10 +49,10 @@ public static enum role {
                     System.exit(0);
                     break;
                 case "1":
-                    this.registration(listUsers,listReaders, saver);
+                    this.registration();
                     break;
                 case "2":
-                    return this.checkInUser(listUsers);
+                    return this.checkInUser();
                     
                 default:
                     System.out.println("Выберите указанные задачи.");;
@@ -69,23 +70,25 @@ public static enum role {
         return numTask;
     }
 
-    private void registration(List<User> listUsers, List<Reader> listReaders, SaveInterface saver) {
+    private void registration() {
         UserManager userManager = new UserManager();
         User user = userManager.createUser();
-        userManager.addUserToArray(user, listUsers);
-        ReaderManager readerManager = new ReaderManager();
-        readerManager.addReaderToArray(user.getReader(), listReaders);
-       
-        saver.save(listReaders,"readers");
-        saver.save(listUsers, "users");
+        UserDBController userDBController = new UserDBController();
+        userDBController.create(user);
     }
 
-    private User checkInUser(List<User> listUsers) {
+    private User checkInUser() {
         System.out.println("--- Вход в систему ---");
         System.out.println("Введите логин: ");
         String login = scanner.nextLine();
         System.out.println("Введите пароль: ");
         String password = scanner.nextLine();
+        UserDBController userDBController = new UserDBController();
+        List<User>listUsers = userDBController.findAll();
+        if(listUsers == null){
+            System.out.println("У вас нет доступа. Зарегистрируйтесь.");
+            System.exit(0);
+        }
         for (int i = 0; i < listUsers.size(); i++) {
             User user = listUsers.get(i);
             if(user == null) continue;

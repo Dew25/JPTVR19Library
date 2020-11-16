@@ -6,6 +6,7 @@
 package tools.creators;
 
 import entity.Book;
+import entity.dbcontrollers.BookDBController;
 import java.util.List;
 import java.util.Scanner;
 
@@ -32,11 +33,9 @@ public class BookManager {
         return book;
     }
 
-    public void addBookToArray(Book book, List<Book> listBooks) {
-        listBooks.add(book);
-    }
-
-    public void printListBooks(List<Book> listBooks) {
+    public void printListBooks() {
+        BookDBController bookDBController = new BookDBController();
+        List<Book> listBooks = bookDBController.fildAll();
         for (int i = 0; i < listBooks.size(); i++) {
             if(listBooks.get(i) != null){
                 System.out.println(i+1+". " + listBooks.get(i).toString());

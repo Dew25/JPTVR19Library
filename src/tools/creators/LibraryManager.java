@@ -9,6 +9,9 @@ import entity.Book;
 import entity.History;
 import entity.Reader;
 import entity.User;
+import entity.dbcontrollers.BookDBController;
+import entity.dbcontrollers.HistoryDBController;
+import entity.dbcontrollers.ReaderDBController;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -24,7 +27,7 @@ public class LibraryManager {
     private ReaderManager readerManager = new ReaderManager();
     private BookManager bookManager = new BookManager();
 
-    public History takeOnBook(List<Book> listBooks, List<Reader> listReaders) {
+    public History takeOnBook() {
         History history = new History();
         // Вывести список читателей
         // Попросить пользователя выбрать номер читателя
@@ -32,23 +35,26 @@ public class LibraryManager {
         // Тоже самое проделать для читателя.
         // Инициировать history и отдать его return
         User loggedInUser = App.loginedUser;
+        ReaderDBController readerDBController = new ReaderDBController();
+        BookDBController bookDBController = new BookDBController();
         Reader reader = null;
+        
         if("READER".equals(loggedInUser.getRole())){
             reader = loggedInUser.getReader();
         }else if("MANAGER".equals(loggedInUser.getRole())){
             System.out.println("--- Список читателей ---");
-            readerManager.printListReaders(listReaders);
+            readerManager.printListReaders();
             System.out.print("Выберите номер читателя: ");
-            int readerNumber = scanner.nextInt();
+            Long readerNumber = scanner.nextLong();
             scanner.nextLine();
-            reader = listReaders.get(readerNumber-1);
+            reader = readerDBController.find(readerNumber);
         }
         history.setReader(reader);
-        bookManager.printListBooks(listBooks);
+        bookManager.printListBooks();
         System.out.print("Выберите номер книги: ");
-        int bookNumber = scanner.nextInt();
+        Long bookNumber = scanner.nextLong();
         scanner.nextLine();
-        Book book = listBooks.get(bookNumber-1);
+        Book book = bookDBController.find(bookNumber);
         history.setBook(book);
         Calendar calendar = new GregorianCalendar();
         history.setGiveOutDate(calendar.getTime());
@@ -56,13 +62,15 @@ public class LibraryManager {
         return history;
     }
 
-    public void returnBook(List<History> listHistories) {
+    public void returnBook() {
         System.out.println("--- Список выданных книг ---");
+        HistoryDBController historyDBController = new HistoryDBController();
+        List<History> listHistories = historyDBController.findReadAll(App.loginedUser.getReader(), Boolean.TRUE);
         for (int i = 0; i < listHistories.size(); i++) {
             if("MANAGER".equals(App.loginedUser.getRole())){
                 if(listHistories.get(i) != null && listHistories.get(i).getReturnDate() == null){
                     System.out.printf("%d. Книгу \"%s\" читает %s %s%n" 
-                            ,i+1
+                            ,listHistories.get(i).getId()
                             ,listHistories.get(i).getBook().getName()
                             ,listHistories.get(i).getReader().getFirstname()
                             ,listHistories.get(i).getReader().getLastname()
@@ -73,7 +81,7 @@ public class LibraryManager {
                         && listHistories.get(i).getReader().equals(App.loginedUser.getReader())
                         && listHistories.get(i).getReturnDate() == null){
                     System.out.printf("%d. Книгу \"%s\" читает %s %s%n" 
-                            ,i+1
+                            ,listHistories.get(i).getId()
                             ,listHistories.get(i).getBook().getName()
                             ,listHistories.get(i).getReader().getFirstname()
                             ,listHistories.get(i).getReader().getLastname()
@@ -82,14 +90,12 @@ public class LibraryManager {
             }
         }
         System.out.print("Выберите номер возвращаемой книги: ");
-        int historyNumber = scanner.nextInt();
+        Long historyNumber = scanner.nextLong();
         scanner.nextLine();
         Calendar calendar = new GregorianCalendar();
-        listHistories.get(historyNumber-1).setReturnDate(calendar.getTime());
-    }
-
-    public void addHistoryToArray(History history, List<History> listHistories) {
-        listHistories.add(history);
+        History history = historyDBController.find(historyNumber);
+        history.setReturnDate(calendar.getTime());
+        historyDBController.edit(history);
     }
 
     private void printHistory(History history) {
@@ -100,11 +106,13 @@ public class LibraryManager {
         );
     }
 
-    public void printListReadBooks(List<History> listHistories) {
+    public void printListReadBooks() {
+        HistoryDBController historyDBController = new HistoryDBController();
+        List<History> listHistories = historyDBController.findReadAll(App.loginedUser.getReader(),true);
         for (int i = 0; i < listHistories.size(); i++) {
             if(listHistories.get(i) != null && listHistories.get(i).getReturnDate()==null){
                 System.out.printf("%d. Книгу \"%s\" читает %s %s%n" 
-                        ,i+1
+                        ,listHistories.get(i).getId()
                         ,listHistories.get(i).getBook().getName()
                         ,listHistories.get(i).getReader().getFirstname()
                         ,listHistories.get(i).getReader().getLastname()

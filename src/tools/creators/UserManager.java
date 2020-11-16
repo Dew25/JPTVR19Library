@@ -7,6 +7,7 @@ package tools.creators;
 
 import entity.Reader;
 import entity.User;
+import entity.dbcontrollers.ReaderDBController;
 import java.util.List;
 import java.util.Scanner;
 import security.SecureManager;
@@ -21,6 +22,8 @@ public class UserManager {
     public User createUser() {
         ReaderManager readerManager = new ReaderManager();
         Reader reader = readerManager.createReader();
+        ReaderDBController readerDBController = new ReaderDBController();
+        readerDBController.create(reader);
         User user = new User();
         System.out.println("--- Создание пользователя ---");
         System.out.print("Введите логин: ");

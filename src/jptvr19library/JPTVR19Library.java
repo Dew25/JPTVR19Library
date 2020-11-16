@@ -22,12 +22,7 @@ public class JPTVR19Library {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String param = "base";
-        if(args.length > 0){
-            param = args[0];
-        }
-        
-        App app = new App(param);
+        App app = new App();
         app.run();
     }
     
