@@ -5,34 +5,27 @@
  */
 package entity.dbcontrollers;
 
-import entity.User;
-import java.util.List;
+import entity.Book;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 
 /**
  *
  * @author Melnikov
  */
-public class UserDBController {
+public class BookFacade extends AbstractFacade<Book>{
     private EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTVR19LibraryPU");
     private EntityManager em = emf.createEntityManager();
-    private EntityTransaction tx = em.getTransaction();
-    
-    public void create(User user){
-        tx.begin();
-        em.persist(user);
-        tx.commit();
+
+    public BookFacade(Class<Book> entityClass) {
+        super(entityClass);
     }
 
-    public List<User> findAll() {
-        try {
-            return em.createQuery("SELECT u FROM User u")
-                    .getResultList();
-        } catch (Exception e) {
-            return null;
-        }
+    @Override
+    protected EntityManager getEntityManager() {
+        return em;
     }
+    
+    
 }

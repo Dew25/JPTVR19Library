@@ -9,9 +9,9 @@ import entity.Book;
 import entity.History;
 import entity.Reader;
 import entity.User;
-import entity.dbcontrollers.BookDBController;
-import entity.dbcontrollers.HistoryDBController;
-import entity.dbcontrollers.ReaderDBController;
+import entity.dbcontrollers.BookFacade;
+import entity.dbcontrollers.HistoryFacade;
+import entity.dbcontrollers.ReaderFacade;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -26,6 +26,9 @@ public class LibraryManager {
     private Scanner scanner = new Scanner(System.in);
     private ReaderManager readerManager = new ReaderManager();
     private BookManager bookManager = new BookManager();
+    private ReaderFacade readerFacade = new ReaderFacade(Reader.class);
+    private BookFacade bookFacade = new BookFacade(Book.class);
+    private HistoryFacade historyFacade = new HistoryFacade(History.class);
 
     public History takeOnBook() {
         History history = new History();
@@ -35,8 +38,6 @@ public class LibraryManager {
         // Тоже самое проделать для читателя.
         // Инициировать history и отдать его return
         User loggedInUser = App.loginedUser;
-        ReaderDBController readerDBController = new ReaderDBController();
-        BookDBController bookDBController = new BookDBController();
         Reader reader = null;
         
         if("READER".equals(loggedInUser.getRole())){
@@ -47,25 +48,25 @@ public class LibraryManager {
             System.out.print("Выберите номер читателя: ");
             Long readerNumber = scanner.nextLong();
             scanner.nextLine();
-            reader = readerDBController.find(readerNumber);
+            reader = readerFacade.find(readerNumber);
         }
         history.setReader(reader);
         bookManager.printListBooks();
         System.out.print("Выберите номер книги: ");
         Long bookNumber = scanner.nextLong();
         scanner.nextLine();
-        Book book = bookDBController.find(bookNumber);
+        Book book = bookFacade.find(bookNumber);
         history.setBook(book);
         Calendar calendar = new GregorianCalendar();
         history.setGiveOutDate(calendar.getTime());
+        historyFacade.create(history);
         this.printHistory(history);
         return history;
     }
 
     public void returnBook() {
         System.out.println("--- Список выданных книг ---");
-        HistoryDBController historyDBController = new HistoryDBController();
-        List<History> listHistories = historyDBController.findReadAll(App.loginedUser.getReader(), Boolean.TRUE);
+        List<History> listHistories = historyFacade.findReadAll(App.loginedUser.getReader(), Boolean.TRUE);
         for (int i = 0; i < listHistories.size(); i++) {
             if("MANAGER".equals(App.loginedUser.getRole())){
                 if(listHistories.get(i) != null && listHistories.get(i).getReturnDate() == null){
@@ -93,9 +94,9 @@ public class LibraryManager {
         Long historyNumber = scanner.nextLong();
         scanner.nextLine();
         Calendar calendar = new GregorianCalendar();
-        History history = historyDBController.find(historyNumber);
+        History history = historyFacade.find(historyNumber);
         history.setReturnDate(calendar.getTime());
-        historyDBController.edit(history);
+        historyFacade.edit(history);
     }
 
     private void printHistory(History history) {
@@ -107,8 +108,7 @@ public class LibraryManager {
     }
 
     public void printListReadBooks() {
-        HistoryDBController historyDBController = new HistoryDBController();
-        List<History> listHistories = historyDBController.findReadAll(App.loginedUser.getReader(),true);
+        List<History> listHistories = historyFacade.findReadAll(App.loginedUser.getReader(),true);
         for (int i = 0; i < listHistories.size(); i++) {
             if(listHistories.get(i) != null && listHistories.get(i).getReturnDate()==null){
                 System.out.printf("%d. Книгу \"%s\" читает %s %s%n" 

@@ -8,9 +8,6 @@ package ui;
 import entity.Book;
 import entity.History;
 import entity.User;
-import entity.dbcontrollers.BookDBController;
-import entity.dbcontrollers.HistoryDBController;
-import entity.dbcontrollers.UserDBController;
 import java.util.Scanner;
 import tools.creators.BookManager;
 import tools.creators.LibraryManager;
@@ -53,8 +50,6 @@ public class ManagerUI {
                 case "1":
                     System.out.println("--- Добавить новую книгу ---");
                     Book book = bookManager.createBook();
-                    BookDBController bookDBController = new BookDBController();
-                    bookDBController.create(book);
                     break;
                 case "2":
                     System.out.println("--- Список книг ---");
@@ -63,8 +58,6 @@ public class ManagerUI {
                 case "3":
                     System.out.println("--- Зарегистрировать читателя ---");
                     User user = userManager.createUser();
-                    UserDBController userDBController = new UserDBController();
-                    userDBController.create(user);
                     break;
                 case "4":
                     System.out.println("--- Список читателей ---");
@@ -73,8 +66,6 @@ public class ManagerUI {
                 case "5":
                     System.out.println("--- Выдать книгу читателю ---");
                     History history = libraryManager.takeOnBook();
-                    HistoryDBController historyDBController = new HistoryDBController();
-                    historyDBController.create(history);
                     break;
                 case "6":
                     System.out.println("--- Вернуть книгу в библиотеку ---");

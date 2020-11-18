@@ -5,14 +5,11 @@
  */
 package security;
 
-import entity.Reader;
 import entity.User;
-import entity.dbcontrollers.UserDBController;
+import entity.dbcontrollers.UserFacade;
 import java.util.List;
 import java.util.Scanner;
-import tools.creators.ReaderManager;
 import tools.creators.UserManager;
-import tools.savers.SaveInterface;
 
 
 /**
@@ -21,6 +18,7 @@ import tools.savers.SaveInterface;
  */
 public class SecureManager {
     
+private UserFacade userFacade = new UserFacade(User.class);
 private Scanner scanner = new Scanner(System.in);
 public static enum role {
         READER, 
@@ -73,8 +71,7 @@ public static enum role {
     private void registration() {
         UserManager userManager = new UserManager();
         User user = userManager.createUser();
-        UserDBController userDBController = new UserDBController();
-        userDBController.create(user);
+        userFacade.create(user);
     }
 
     private User checkInUser() {
@@ -83,8 +80,7 @@ public static enum role {
         String login = scanner.nextLine();
         System.out.println("Введите пароль: ");
         String password = scanner.nextLine();
-        UserDBController userDBController = new UserDBController();
-        List<User>listUsers = userDBController.findAll();
+        List<User>listUsers = userFacade.findAll();
         if(listUsers == null){
             System.out.println("У вас нет доступа. Зарегистрируйтесь.");
             System.exit(0);

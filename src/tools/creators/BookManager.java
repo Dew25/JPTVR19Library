@@ -6,7 +6,7 @@
 package tools.creators;
 
 import entity.Book;
-import entity.dbcontrollers.BookDBController;
+import entity.dbcontrollers.BookFacade;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,6 +15,7 @@ import java.util.Scanner;
  * @author Melnikov
  */
 public class BookManager {
+        private BookFacade bookFacade = new BookFacade(Book.class);
         private Scanner scanner = new Scanner(System.in);
 
     public Book createBook() {
@@ -30,15 +31,15 @@ public class BookManager {
         System.out.print("Введите ISBN книги: ");
         book.setIsbn(scanner.nextLine());
         System.out.println("Создана книга: "+book.getName());
+        bookFacade.create(book);
         return book;
     }
 
     public void printListBooks() {
-        BookDBController bookDBController = new BookDBController();
-        List<Book> listBooks = bookDBController.fildAll();
+        List<Book> listBooks = bookFacade.findAll();
         for (int i = 0; i < listBooks.size(); i++) {
             if(listBooks.get(i) != null){
-                System.out.println(i+1+". " + listBooks.get(i).toString());
+                System.out.println(listBooks.get(i).getId()+". " + listBooks.get(i).toString());
             }
         }   
     }

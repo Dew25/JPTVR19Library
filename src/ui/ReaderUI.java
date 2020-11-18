@@ -5,17 +5,11 @@
  */
 package ui;
 
-import entity.Book;
 import entity.History;
-import entity.Reader;
-import entity.User;
-import entity.dbcontrollers.HistoryDBController;
-import java.util.List;
 import java.util.Scanner;
 import tools.creators.BookManager;
 import tools.creators.LibraryManager;
 import tools.creators.ReaderManager;
-import tools.savers.SaveInterface;
 
 
 
@@ -51,8 +45,6 @@ public class ReaderUI {
                 case "2":
                     System.out.println("--- Выдать книгу читателю ---");
                     History history = libraryManager.takeOnBook();
-                    HistoryDBController historyDBController = new HistoryDBController();
-                    historyDBController.create(history);
                     break;
                 case "3":
                     System.out.println("--- Вернуть книгу в библиотеку ---");
