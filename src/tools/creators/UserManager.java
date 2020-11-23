@@ -7,8 +7,9 @@ package tools.creators;
 
 import entity.Reader;
 import entity.User;
-import entity.dbcontrollers.ReaderFacade;
-import entity.dbcontrollers.UserFacade;
+import entity.facade.ReaderFacade;
+import entity.facade.UserFacade;
+import factory.FactoryFacade;
 import java.util.List;
 import java.util.Scanner;
 import security.SecureManager;
@@ -18,8 +19,8 @@ import security.SecureManager;
  * @author Melnikov
  */
 public class UserManager {
-        private ReaderFacade readerFacade = new ReaderFacade(Reader.class);
-        private UserFacade userFacade = new UserFacade(User.class);
+        private ReaderFacade readerFacade = FactoryFacade.getReaderFacade();
+        private UserFacade userFacade = FactoryFacade.getUserFacade();
         private Scanner scanner = new Scanner(System.in);
 
     public User createUser() {

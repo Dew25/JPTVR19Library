@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package entity.dbcontrollers;
+package entity.facade;
 
-import entity.User;
+import entity.Reader;
+import factory.ConnectSingleton;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -14,12 +15,14 @@ import javax.persistence.Persistence;
  *
  * @author Melnikov
  */
-public class UserFacade extends AbstractFacade<User>{
-    private EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPTVR19LibraryPU");
-    private EntityManager em = emf.createEntityManager();
+public class ReaderFacade extends AbstractFacade<Reader>{
+   
+    private EntityManager em;
 
-    public UserFacade(Class<User> entityClass) {
-        super(entityClass);
+    public ReaderFacade() {
+        super(Reader.class);
+        ConnectSingleton connect = ConnectSingleton.getInstance();
+        em = connect.getEntityManager();
     }
 
     @Override

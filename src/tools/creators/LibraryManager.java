@@ -9,9 +9,10 @@ import entity.Book;
 import entity.History;
 import entity.Reader;
 import entity.User;
-import entity.dbcontrollers.BookFacade;
-import entity.dbcontrollers.HistoryFacade;
-import entity.dbcontrollers.ReaderFacade;
+import entity.facade.BookFacade;
+import entity.facade.HistoryFacade;
+import entity.facade.ReaderFacade;
+import factory.FactoryFacade;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -26,9 +27,9 @@ public class LibraryManager {
     private Scanner scanner = new Scanner(System.in);
     private ReaderManager readerManager = new ReaderManager();
     private BookManager bookManager = new BookManager();
-    private ReaderFacade readerFacade = new ReaderFacade(Reader.class);
-    private BookFacade bookFacade = new BookFacade(Book.class);
-    private HistoryFacade historyFacade = new HistoryFacade(History.class);
+    private ReaderFacade readerFacade = FactoryFacade.getReaderFacade();
+    private BookFacade bookFacade = FactoryFacade.getBookFacade();
+    private HistoryFacade historyFacade = FactoryFacade.getHistoryFacade();
 
     public History takeOnBook() {
         History history = new History();

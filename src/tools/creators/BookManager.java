@@ -6,7 +6,8 @@
 package tools.creators;
 
 import entity.Book;
-import entity.dbcontrollers.BookFacade;
+import entity.facade.BookFacade;
+import factory.FactoryFacade;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ import java.util.Scanner;
  * @author Melnikov
  */
 public class BookManager {
-        private BookFacade bookFacade = new BookFacade(Book.class);
+        private BookFacade bookFacade = FactoryFacade.getBookFacade();
         private Scanner scanner = new Scanner(System.in);
 
     public Book createBook() {

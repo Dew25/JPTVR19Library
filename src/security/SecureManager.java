@@ -6,7 +6,8 @@
 package security;
 
 import entity.User;
-import entity.dbcontrollers.UserFacade;
+import entity.facade.UserFacade;
+import factory.FactoryFacade;
 import java.util.List;
 import java.util.Scanner;
 import tools.creators.UserManager;
@@ -18,7 +19,7 @@ import tools.creators.UserManager;
  */
 public class SecureManager {
     
-private UserFacade userFacade = new UserFacade(User.class);
+private UserFacade userFacade = FactoryFacade.getUserFacade();
 private Scanner scanner = new Scanner(System.in);
 public static enum role {
         READER, 
@@ -71,7 +72,6 @@ public static enum role {
     private void registration() {
         UserManager userManager = new UserManager();
         User user = userManager.createUser();
-        userFacade.create(user);
     }
 
     private User checkInUser() {

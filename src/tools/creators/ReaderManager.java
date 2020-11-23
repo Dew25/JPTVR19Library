@@ -6,7 +6,8 @@
 package tools.creators;
 
 import entity.Reader;
-import entity.dbcontrollers.ReaderFacade;
+import entity.facade.ReaderFacade;
+import factory.FactoryFacade;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,7 +16,7 @@ import java.util.Scanner;
  * @author Melnikov
  */
 public class ReaderManager {
-    private ReaderFacade readerFacade = new ReaderFacade(Reader.class);
+    private ReaderFacade readerFacade = FactoryFacade.getReaderFacade();
     private Scanner scanner = new Scanner(System.in);
     public Reader createReader() {
         Reader reader = new Reader();
